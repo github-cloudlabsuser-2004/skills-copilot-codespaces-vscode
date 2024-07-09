@@ -1,0 +1,27 @@
+# Create a GitHub action to email a report from a file at 6 a.m. daily
+name: Email Report
+on:
+  schedule:
+    - cron: '0 6 * * *'
+jobs:
+  email_report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Email report
+        env:
+          SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          EMAIL: ${{ secrets.EMAIL }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
+        run: python email_report.py
+ 
+ The  email_report.py  script reads the contents of the  report.txt  file and sends an email with the contents to the specified recipient.
